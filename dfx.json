@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "xero_backend": {
+      "main": "src/xero_backend/main.mo",
+      "type": "motoko"
+    },
+    "xero_frontend": {
+      "dependencies": [
+        "xero_backend"
+      ],
+      "source": [
+        "src/xero_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "xero_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
