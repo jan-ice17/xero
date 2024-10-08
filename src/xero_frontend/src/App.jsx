@@ -1,31 +1,45 @@
-import { useState } from 'react';
-import { xero_backend } from 'declarations/xero_backend';
+// src/App.jsx
 
-function App() {
-  const [greeting, setGreeting] = useState('');
+import React, { useState } from "react";
+import Header from "./sections/Header.jsx";
+import Hero from "./sections/Hero.jsx";
+import Features from "./sections/Features.jsx";
+import Pricing from "./sections/Pricing.jsx";
+import Faq from "./sections/Faq.jsx";
+import Testimonials from "./sections/Testimonials.jsx";
+import Download from "./sections/Download.jsx";
+import Footer from "./sections/Footer.jsx";
+import Dashboard from "./sections/Dashboard.jsx"; // The main dashboard component
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    xero_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+const App = () => {
+  const [activePage, setActivePage] = useState("home");
+
+  const renderContent = () => {
+    switch (activePage) {
+      case "dashboard": // Render the dashboard-related content
+        return <Dashboard />;
+      case "home":
+      default:
+        return (
+          <>
+            <Hero setActivePage={setActivePage} />
+            <Features />
+            <Pricing />
+            <Faq />
+            <Testimonials />
+            <Download />
+            <Footer />
+          </>
+        );
+    }
+  };
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
+    <main className="overflow-hidden">
+      {activePage !== "dashboard" && <Header />}
+      {renderContent()}
     </main>
   );
-}
+};
 
 export default App;
