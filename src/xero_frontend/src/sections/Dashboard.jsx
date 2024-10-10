@@ -11,7 +11,7 @@ import {
   FaChevronDown,
   FaChevronUp,
   FaWallet,
-  FaTrophy, // XeroLeague Icon
+  FaTrophy,
 } from "react-icons/fa";
 
 import BusinessProfile from "./BusinessProfile";
@@ -21,51 +21,54 @@ import Charity from "./Charity";
 import Community from "./Community";
 import Tokens from "./Tokens";
 import Central from "./Central";
-import XeroLeague from "./XeroLeague"; // Import the XeroLeague component
+import XeroLeague from "./XeroLeague";
 
 const Dashboard = () => {
   const [walletAddress, setWalletAddress] = useState("");
-  const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
+  const [isPlugInstalled, setIsPlugInstalled] = useState(false);
   const [isBusinessOpen, setIsBusinessOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("central"); // Track the active section
+  const [activeSection, setActiveSection] = useState("central");
 
+  // Check if Plug Wallet is installed
   useEffect(() => {
-    if (typeof window.ethereum !== "undefined") {
-      setIsMetaMaskInstalled(true);
+    if (window.ic?.plug) {
+      setIsPlugInstalled(true);
     }
   }, []);
 
+  // Function to connect wallet using Plug Wallet
   const connectWallet = async () => {
-    if (window.ethereum) {
-      try {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        await window.ethereum.request({ method: "eth_requestAccounts" });
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        setWalletAddress(address);
-        alert(`Connected! Your wallet address is: ${address}`);
-      } catch (error) {
-        console.error("Failed to connect to MetaMask:", error);
-      }
-    } else {
-      alert("MetaMask not detected. Please install MetaMask.");
+    if (!window.ic?.plug) {
+      window.open("https://plugwallet.ooo/", "_blank");
+      alert("Plug wallet not installed.");
+      return;
+    }
+    try {
+      await window.ic.plug.requestConnect();
+      const principalId = await window.ic.plug.agent.getPrincipal();
+      setWalletAddress(principalId.toString());
+      alert(`Connected! Your wallet address is: ${principalId}`);
+    } catch (error) {
+      console.error("Failed to connect to Plug wallet:", error);
+      alert("Failed to connect to Plug wallet. Please try again.");
     }
   };
 
+  // Toggle business dropdown menu
   const toggleBusinessDropdown = () => {
     setIsBusinessOpen(!isBusinessOpen);
   };
 
-  // Function to render the correct section based on the active selection
+  // Render the active section
   const renderSection = () => {
-    const businessType = localStorage.getItem('businessType');
-
-    // Check if the user has completed the business profile setup
-    if (!businessType && (activeSection === 'supermarket' || activeSection === 'restaurant' || activeSection === 'charity')) {
+    const businessType = localStorage.getItem("businessType");
+    if (!businessType && (activeSection === "supermarket" || activeSection === "restaurant" || activeSection === "charity")) {
       return (
         <div>
           <h1>Oops!</h1>
-          <p>It looks like you haven't set up your business profile yet. Please complete your profile to access the available businesses.</p>
+          <p>
+            It looks like you haven't set up your business profile yet. Please complete your profile to access the available businesses.
+          </p>
         </div>
       );
     }
@@ -83,7 +86,7 @@ const Dashboard = () => {
         return <Community />;
       case "tokens":
         return <Tokens />;
-      case "xero-league": // Add XeroLeague case
+      case "xero-league":
         return <XeroLeague />;
       case "central":
       default:
@@ -120,11 +123,7 @@ const Dashboard = () => {
           <div className="menu-section">
             <motion.div className="menu-item dropdown-toggle" onClick={toggleBusinessDropdown}>
               <span style={{ color: "#9bb5bf" }}>Your business</span>
-              {isBusinessOpen ? (
-                <FaChevronUp className="chevron-icon" style={{ color: "#9bb5bf" }} />
-              ) : (
-                <FaChevronDown className="chevron-icon" style={{ color: "#9bb5bf" }} />
-              )}
+              {isBusinessOpen ? <FaChevronUp className="chevron-icon" style={{ color: "#9bb5bf" }} /> : <FaChevronDown className="chevron-icon" style={{ color: "#9bb5bf" }} />}
             </motion.div>
 
             {isBusinessOpen && (
@@ -177,14 +176,8 @@ const Dashboard = () => {
         </div>
 
         {/* Connect Wallet Button */}
-        <motion.button className="connect-wallet" onClick={connectWallet} disabled={!isMetaMaskInstalled}>
-          {walletAddress ? (
-            `Wallet Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
-          ) : (
-            <>
-              <FaWallet className="wallet-icon" /> CONNECT YOUR WALLET
-            </>
-          )}
+        <motion.button className="connect-wallet" onClick={connectWallet} disabled={!isPlugInstalled}>
+          {walletAddress ? `Wallet Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : <><FaWallet className="wallet-icon" /> CONNECT YOUR WALLET</>}
         </motion.button>
       </motion.div>
 

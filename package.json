@@ -5,21 +5,19 @@
   },
   "name": "xero",
   "scripts": {
-  "dev": "vite --port 3000",
-  "build": "npm run build --workspaces --if-present",
-  "prebuild": "npm run prebuild --workspaces --if-present",
-  "pretest": "npm run prebuild --workspaces --if-present",
-  "start": "vite --port 3000",
-  "test": "npm test --workspaces --if-present"
-
-
-
+    "dev": "vite --port 3000",
+    "build": "npm run build --workspaces --if-present",
+    "prebuild": "npm run prebuild --workspaces --if-present",
+    "pretest": "npm run prebuild --workspaces --if-present",
+    "start": "vite --port 3000",
+    "test": "npm test --workspaces --if-present"
   },
   "type": "module",
   "workspaces": [
     "src/xero_frontend"
   ],
   "dependencies": {
+    "@dfinity/auth-client": "^2.1.2",
     "clsx": "^2.1.1",
     "ethers": "^6.13.3",
     "framer-motion": "^11.11.4",
