@@ -76,6 +76,17 @@ const Supermarket = () => {
     return (
       <div className={`inventory-page-container ${isFullscreen ? "fullscreen" : ""}`}>
         {renderInventoryTable()}
+
+        {/* Chatbot appears only when inventory page is displayed */}
+        <div className="chatbot-container">
+          <iframe
+            src="https://www.chatbase.co/chatbot-iframe/M_W_nbvSXXtcG7gvWhIQi"
+            width="100%"
+            style={{ height: "100%", minHeight: "700px" }}
+            frameBorder="0"
+          ></iframe>
+        </div>
+
         <style>{`
           .inventory-page-container {
             padding: 20px;
@@ -128,6 +139,10 @@ const Supermarket = () => {
             top: 10px;
             right: 20px;
             cursor: pointer;
+          }
+          .chatbot-container {
+            margin-top: 40px;
+            /* Adjust margin based on design */
           }
         `}</style>
       </div>
