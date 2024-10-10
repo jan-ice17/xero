@@ -3,9 +3,11 @@ import HashMap "mo:base/HashMap";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
 import Buffer "mo:base/Buffer";
+import Nat32 "mo:base/Nat32";
+import Hash "mo:base/Hash"; // Added import for Hash
 
 actor Xero {
-  //Types
+    //Types
     type BusinessId = Nat;
     type Business = {
         id: BusinessId;
@@ -18,7 +20,7 @@ actor Xero {
         businessType: BusinessType;
     };
 
-    //community for engangement 
+    //community for engagement 
     type CommunityId = Nat;
     type Community = {
         id: CommunityId;
@@ -33,23 +35,24 @@ actor Xero {
         #CharityNGO;
     };
 
-
     private stable var nextBusinessId : Nat = 0;
-    private var businesses = HashMap.HashMap<BusinessId, Business>(0, Nat.equal, Nat.hash);
+    // Changed to use Hash.hash
+    private var businesses = HashMap.HashMap<BusinessId, Business>(0, Nat.equal, Hash.hash);
    
-   //helper function coz we all need some  help
+    //helper function coz we all need some help
     private func generateBusinessId() : BusinessId {
         nextBusinessId += 1;
         nextBusinessId
     };   
-    public query func getBusiness(id: BusinessId) : async ?Business {
+
+    public func getBusiness(id: BusinessId) : async ?Business {
         // Let's go fishing in our business pool!
         businesses.get(id)
     };
 
-
     private stable var nextCommunityId : Nat = 0;
-    private var communities = HashMap.HashMap<CommunityId, Community>(0, Nat.equal, Nat.hash);
+    // Changed to use Hash.hash
+    private var communities = HashMap.HashMap<CommunityId, Community>(0, Nat.equal, Hash.hash);
 
     private func generateCommunityId() : CommunityId {
         nextCommunityId += 1;
@@ -72,7 +75,6 @@ actor Xero {
         // huraay i just created a business faster than you can say "blockchain"!
         id
     };  
-
 
     public func updateBusiness(id: BusinessId, name: Text, address: Text, country: Text, logoUrl: Text, bannerUrl: Text, cuisineType: Text) : async Bool {
         switch (businesses.get(id)) {
@@ -98,16 +100,16 @@ actor Xero {
         }
     };
 
-    public query func getAllBusinesses() : async [Business] {
+    public func getAllBusinesses() : async [Business] {
         // Time for a business parade! 🎉
         Array.tabulate<Business>(businesses.size(), func(i: Nat) : Business {
-            switch (businesses.get(Nat.fromNat32(Nat32.fromNat(i)))) {
+            // Changed Nat.fromNat32 to Nat32.toNat
+            switch (businesses.get(Nat32.toNat(Nat32.fromNat(i)))) {
                 case (?business) { business };
                 case (null) { 
                     // If we hit this case, someone's been messing with our secret sauce!
                     {
                         id = 0;
-
                         name = "Mysterious Business";
                         address = "Somewhere Over the Rainbow";
                         country = "Wonderland";
@@ -120,7 +122,6 @@ actor Xero {
             }
         })
     }; 
-
 
     public func createCommunity(name: Text, description: Text) : async CommunityId {
         let id = generateCommunityId();
@@ -156,16 +157,15 @@ actor Xero {
         }
     };
 
-    public query func searchCommunities(query: Text) : async [Community] {
-        // Time to play detective and find those sneaky communities!
-        let matchingCommunities = Buffer.Buffer<Community>(0);
-        for ((_, community) in communities.entries()) {
-            if (Text.contains(community.name, #text query) or Text.contains(community.description, #text query)) {
-                matchingCommunities.add(community);
-            }
-        };
-        Buffer.toArray(matchingCommunities)
-    };
-
+    // public func searchCommunities(query: Text) : async [Community] {
+    //     // Time to play detective and find those sneaky communities!
+    //     let matchingCommunities = Buffer.Buffer<Community>(0);
+    //     for ((_, community) in communities.entries()) {
+    //         if (Text.contains(community.name, #text query) or Text.contains(community.description, #text query)) {
+    //             matchingCommunities.add(community);
+    //         }
+    //     };
+    //     Buffer.toArray(matchingCommunities)
+    // };
     // Remember, in Xero, we don't just reduce food waste, we make it disappear like a magician with a rabbit!
 }
