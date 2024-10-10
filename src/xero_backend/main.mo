@@ -2,6 +2,7 @@ import Array "mo:base/Array";
 import HashMap "mo:base/HashMap";
 import Nat "mo:base/Nat";
 import Text "mo:base/Text";
+import Buffer "mo:base/Buffer";
 
 actor Xero {
   //Types
@@ -17,11 +18,21 @@ actor Xero {
         businessType: BusinessType;
     };
 
+    //community for engangement 
+    type CommunityId = Nat;
+    type Community = {
+        id: CommunityId;
+        name: Text;
+        description: Text;
+        members: [BusinessId];
+    };
+
     type BusinessType = {
         #SupermarketStore;
         #RestaurantFastFood;
         #CharityNGO;
     };
+
 
     private stable var nextBusinessId : Nat = 0;
     private var businesses = HashMap.HashMap<BusinessId, Business>(0, Nat.equal, Nat.hash);
@@ -34,6 +45,15 @@ actor Xero {
     public query func getBusiness(id: BusinessId) : async ?Business {
         // Let's go fishing in our business pool!
         businesses.get(id)
+    };
+
+
+    private stable var nextCommunityId : Nat = 0;
+    private var communities = HashMap.HashMap<CommunityId, Community>(0, Nat.equal, Nat.hash);
+
+    private func generateCommunityId() : CommunityId {
+        nextCommunityId += 1;
+        nextCommunityId
     };
 
     public func createBusiness(name: Text, address: Text, country: Text, logoUrl: Text, bannerUrl: Text, cuisineType: Text, businessType: BusinessType) : async BusinessId {
