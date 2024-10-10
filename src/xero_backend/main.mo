@@ -119,5 +119,53 @@ actor Xero {
                 };
             }
         })
-    };   
+    }; 
+
+
+    public func createCommunity(name: Text, description: Text) : async CommunityId {
+        let id = generateCommunityId();
+        let newCommunity : Community = {
+            id;
+            name;
+            description;
+            members = [];
+        };
+        communities.put(id, newCommunity);
+        // Congratulations! You've just created a community faster than you can say "food waste"!
+        id
+    };
+
+    public func joinCommunity(communityId: CommunityId, businessId: BusinessId) : async Bool {
+        switch (communities.get(communityId)) {
+            case (null) { 
+                // This community is playing hard to get!
+                false 
+            };
+            case (?community) {
+                let updatedMembers = Array.append(community.members, [businessId]);
+                let updatedCommunity : Community = {
+                    id = community.id;
+                    name = community.name;
+                    description = community.description;
+                    members = updatedMembers;
+                };
+                communities.put(communityId, updatedCommunity);
+                // Welcome aboard! Don't forget to bring snacks to the next meeting!
+                true
+            };
+        }
+    };
+
+    public query func searchCommunities(query: Text) : async [Community] {
+        // Time to play detective and find those sneaky communities!
+        let matchingCommunities = Buffer.Buffer<Community>(0);
+        for ((_, community) in communities.entries()) {
+            if (Text.contains(community.name, #text query) or Text.contains(community.description, #text query)) {
+                matchingCommunities.add(community);
+            }
+        };
+        Buffer.toArray(matchingCommunities)
+    };
+
+    // Remember, in Xero, we don't just reduce food waste, we make it disappear like a magician with a rabbit!
 }
