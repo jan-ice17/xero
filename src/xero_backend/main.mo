@@ -31,6 +31,10 @@ actor Xero {
         nextBusinessId += 1;
         nextBusinessId
     };   
+    public query func getBusiness(id: BusinessId) : async ?Business {
+        // Let's go fishing in our business pool!
+        businesses.get(id)
+    };
 
     public func createBusiness(name: Text, address: Text, country: Text, logoUrl: Text, bannerUrl: Text, cuisineType: Text, businessType: BusinessType) : async BusinessId {
         let id = generateBusinessId();
