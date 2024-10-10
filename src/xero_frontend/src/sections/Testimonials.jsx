@@ -2,8 +2,8 @@ import { testimonials } from "../constants/index.jsx";
 import TestimonialItem from "../components/TestimonialItem.jsx";
 
 const Testimonials = () => {
-  // Limit the testimonials to 6
-  const selectedTestimonials = testimonials.slice(0, 6);
+  // Limit the testimonials to 3
+  const selectedTestimonials = testimonials.slice(0, 3);
 
   return (
     <section className="relative z-2 py-24 md:py-28 lg:py-40">
@@ -21,13 +21,12 @@ const Testimonials = () => {
       <div className="container block lg:flex">
         {/* Heading Section with Space Grotesk */}
         <div className="testimonials_head-res relative z-2 mr-20 flex-300 space-grotesk">
-          <p className="caption mb-5 max-md:mb-2.5">XERO's Hall of Praise</p>
-          <h3 className="h3 max-md:h5 text-p4">Hear from Our Founder and Clients</h3>
+          <h3 className="h3 max-md:h5 text-p4">Hear from Our Founders</h3>
         </div>
 
         <div className="testimonials_inner-after testimonials_inner-before relative -my-12 -mr-3 flex items-start max-lg:static max-md:block">
           <div className="flex-50 space-grotesk">
-            {selectedTestimonials.slice(0, 3).map((testimonial) => (
+            {selectedTestimonials.map((testimonial) => (
               <div key={testimonial.id} className="testimonial-item-container">
                 <TestimonialItem
                   item={{
@@ -37,30 +36,6 @@ const Testimonials = () => {
                       `XERO has revolutionized the way we handle food waste and sustainability in our organization.`,
                   }}
                   containerClassName="last:after:hidden last:after:max-md:block"
-                >
-                  <div className="testimonial-image">
-                    <img
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                  </div>
-                </TestimonialItem>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex-50 space-grotesk">
-            {selectedTestimonials.slice(3, 6).map((testimonial) => (
-              <div key={testimonial.id} className="testimonial-item-container">
-                <TestimonialItem
-                  item={{
-                    ...testimonial,
-                    text:
-                      testimonial.text ||
-                      `XERO has helped our business achieve greater sustainability and reduce food waste.`,
-                  }}
-                  containerClassName="last:after:hidden after:right-auto after:left-0 after:max-md:-left-4 md:px-12"
                 >
                   <div className="testimonial-image">
                     <img

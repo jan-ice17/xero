@@ -77,13 +77,17 @@ const Supermarket = () => {
       <div className={`inventory-page-container ${isFullscreen ? "fullscreen" : ""}`}>
         {renderInventoryTable()}
 
-        {/* Chatbot appears only when inventory page is displayed */}
+        {/* Chatbot iframe integration */}
         <div className="chatbot-container">
           <iframe
             src="https://www.chatbase.co/chatbot-iframe/M_W_nbvSXXtcG7gvWhIQi"
+            title="Chatbot"
             width="100%"
-            style={{ height: "100%", minHeight: "700px" }}
+            height="600px"
             frameBorder="0"
+            allow="camera; microphone; clipboard-read; clipboard-write; geolocation"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+            style={{ borderRadius: '10px', border: '2px solid #6be3f8' }} // Added border and radius for better design
           ></iframe>
         </div>
 
@@ -142,7 +146,6 @@ const Supermarket = () => {
           }
           .chatbot-container {
             margin-top: 40px;
-            /* Adjust margin based on design */
           }
         `}</style>
       </div>
