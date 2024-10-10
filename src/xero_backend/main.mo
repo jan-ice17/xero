@@ -54,6 +54,30 @@ actor Xero {
     };  
 
 
+    public func updateBusiness(id: BusinessId, name: Text, address: Text, country: Text, logoUrl: Text, bannerUrl: Text, cuisineType: Text) : async Bool {
+        switch (businesses.get(id)) {
+            case (null) { 
+                // Oops! This business is playing hide and seek, and winning!
+                false 
+            };
+            case (?business) {
+                let updatedBusiness : Business = {
+                    id;
+                    name;
+                    address;
+                    country;
+                    logoUrl;
+                    bannerUrl;
+                    cuisineType;
+                    businessType = business.businessType;
+                };
+                businesses.put(id, updatedBusiness);
+                // Business updated faster than a chef flipping pancakes!
+                true
+            };
+        }
+    };
+
     public query func getAllBusinesses() : async [Business] {
         // Time for a business parade! 🎉
         Array.tabulate<Business>(businesses.size(), func(i: Nat) : Business {
@@ -63,7 +87,7 @@ actor Xero {
                     // If we hit this case, someone's been messing with our secret sauce!
                     {
                         id = 0;
-                        
+
                         name = "Mysterious Business";
                         address = "Somewhere Over the Rainbow";
                         country = "Wonderland";
