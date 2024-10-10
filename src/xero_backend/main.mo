@@ -23,5 +23,7 @@ actor Xero {
         #CharityNGO;
     };
 
+    private stable var nextBusinessId : Nat = 0;
+    private var businesses = HashMap.HashMap<BusinessId, Business>(0, Nat.equal, Nat.hash);
    
 }
