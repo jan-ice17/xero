@@ -26,4 +26,9 @@ actor Xero {
     private stable var nextBusinessId : Nat = 0;
     private var businesses = HashMap.HashMap<BusinessId, Business>(0, Nat.equal, Nat.hash);
    
+   //helper function coz we all need some  help
+    private func generateBusinessId() : BusinessId {
+        nextBusinessId += 1;
+        nextBusinessId
+    };    
 }
