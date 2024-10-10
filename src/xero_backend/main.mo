@@ -51,5 +51,28 @@ actor Xero {
         businesses.put(id, newBusiness);
         // huraay i just created a business faster than you can say "blockchain"!
         id
-    };     
+    };  
+
+
+    public query func getAllBusinesses() : async [Business] {
+        // Time for a business parade! 🎉
+        Array.tabulate<Business>(businesses.size(), func(i: Nat) : Business {
+            switch (businesses.get(Nat.fromNat32(Nat32.fromNat(i)))) {
+                case (?business) { business };
+                case (null) { 
+                    // If we hit this case, someone's been messing with our secret sauce!
+                    {
+                        id = 0;
+                        name = "Mysterious Business";
+                        address = "Somewhere Over the Rainbow";
+                        country = "Wonderland";
+                        logoUrl = "404-logo-not-found.jpg";
+                        bannerUrl = "nothing-to-see-here.png";
+                        cuisineType = "Imagination";
+                        businessType = #SupermarketStore;
+                    }
+                };
+            }
+        })
+    };   
 }
