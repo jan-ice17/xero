@@ -30,5 +30,22 @@ actor Xero {
     private func generateBusinessId() : BusinessId {
         nextBusinessId += 1;
         nextBusinessId
-    };    
+    };   
+
+    public func createBusiness(name: Text, address: Text, country: Text, logoUrl: Text, bannerUrl: Text, cuisineType: Text, businessType: BusinessType) : async BusinessId {
+        let id = generateBusinessId();
+        let newBusiness : Business = {
+            id;
+            name;
+            address;
+            country;
+            logoUrl;
+            bannerUrl;
+            cuisineType;
+            businessType;
+        };
+        businesses.put(id, newBusiness);
+        // huraay i just created a business faster than you can say "blockchain"!
+        id
+    };     
 }
